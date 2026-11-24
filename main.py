@@ -17,9 +17,15 @@ REPLY = (
 def main() -> None:
     text = REPLY.strip()
     assert 1 <= len(text) <= 160, f"reply is {len(text)} chars"
+    assert "\n" not in text, "reply must be a single line"
     os.makedirs("/output", exist_ok=True)
     with open("/output/entry.txt", "w", encoding="utf-8") as f:
         f.write(text + "\n")
+    # Read the file back and verify what the judge will actually see.
+    with open("/output/entry.txt", encoding="utf-8") as f:
+        written = f.read()
+    assert written == text + "\n", "written output differs from reply"
+    assert 1 <= len(written.strip()) <= 160, "written reply is out of range"
 
 
 if __name__ == "__main__":
